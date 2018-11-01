@@ -1,4 +1,4 @@
-package com.konstantinschubert.writeinterceptingwebview;
+package uniparthenope.healthsystemapp.writeinterceptingwebview;
 
 import java.io.IOException;
 import org.jsoup.Jsoup;
@@ -10,7 +10,7 @@ import android.webkit.JavascriptInterface;
 class AjaxInterceptJavascriptInterface {
 
     private static String interceptHeader = null;
-    private WriteHandlingWebViewClient mWebViewClient = null;
+    private WriteHandlingWebViewClient mWebViewClient;
 
     public AjaxInterceptJavascriptInterface(WriteHandlingWebViewClient webViewClient) {
         mWebViewClient = webViewClient;
@@ -33,9 +33,7 @@ class AjaxInterceptJavascriptInterface {
         if (element.size() > 0) {
             element.get(0).prepend(interceptHeader);
         }
-
-        String pageContents = doc.toString();
-        return pageContents;
+        return doc.toString();
     }
 
     @JavascriptInterface

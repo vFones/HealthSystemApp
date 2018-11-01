@@ -1,4 +1,4 @@
-package com.konstantinschubert.writeinterceptingwebview;
+package uniparthenope.healthsystemapp.writeinterceptingwebview;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

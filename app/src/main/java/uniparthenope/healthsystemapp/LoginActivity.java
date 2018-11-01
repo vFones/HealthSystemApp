@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity{
     private String url;
     private String endpointresponse;
     private String token;
-    private Button btnLogin;
     private ProgressBar pgsBar;
 
     @Override
@@ -38,7 +37,7 @@ public class LoginActivity extends AppCompatActivity{
         pgsBar = findViewById(R.id.progressBar);
         valUser = findViewById(R.id.USERNAME_FORM);
         valPasswd = findViewById(R.id.PASSWD_FORM);
-        btnLogin = findViewById(R.id.BTNLOGIN);
+        Button btnLogin = findViewById(R.id.BTNLOGIN);
 
         url = "http://34.211.204.250";
 

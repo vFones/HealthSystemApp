@@ -1,4 +1,4 @@
-package com.konstantinschubert.writeinterceptingwebview;
+package uniparthenope.healthsystemapp.writeinterceptingwebview;
 
 import android.content.Context;
 import android.net.Uri;

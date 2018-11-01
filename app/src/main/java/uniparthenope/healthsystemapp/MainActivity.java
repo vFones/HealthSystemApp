@@ -11,22 +11,22 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import uniparthenope.healthsystemapp.writeinterceptingwebview.WriteHandlingWebResourceRequest;
+import uniparthenope.healthsystemapp.writeinterceptingwebview.WriteHandlingWebViewClient;
 
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-
-import com.konstantinschubert.writeinterceptingwebview.WriteHandlingWebResourceRequest;
-import com.konstantinschubert.writeinterceptingwebview.WriteHandlingWebViewClient;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    private String homepage;
     private Map<String, String> header = new HashMap<>();
     private WebView myWebView;
     private ProgressBar progressBar;
@@ -40,35 +40,44 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar2);
 
         Intent in = getIntent();
-        homepage = "http://34.211.204.250";
+        final String homepage = "http://34.211.204.250";
         header.put("token", in.getStringExtra("token"));
         String urlresponse = in.getStringExtra("url");
 
         myWebView = findViewById(R.id.web);
-        myWebView.setWebViewClient(new WriteHandlingWebViewClient(myWebView) {
+        myWebView.setWebViewClient(new WriteHandlingWebViewClient(myWebView){
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WriteHandlingWebResourceRequest request) {
-                String url = request.getUrl().toString();
-                if(url.startsWith(homepage)) try {
-                    OkHttpClient httpClient = new OkHttpClient();
-                    Request mRequest = new Request.Builder()
-                            .url(request.getUrl().toString())
-                            .method(request.getMethod(), RequestBody.create(null, request.getAjaxData()))
-                            .addHeader("token", Objects.requireNonNull(header.get("token")))
-                            .build();
-                    Response response = httpClient.newCall(mRequest).execute();
-                    assert response.body() != null;
-                    return new WebResourceResponse(
-                            null, // set content-type
-                            response.header("content-encoding", "utf-8"),
-                            response.body().byteStream()
-                    );
-                } catch (Exception e) {
-                    return null;
+                if(request.getUrl().toString().startsWith(homepage)){
+                    try {
+                        OkHttpClient httpClient = new OkHttpClient();
+                        Request mRequest;
+                        if(request.getUrl().toString().equals("GET")) {
+                            mRequest = new Request.Builder()
+                                    .url(request.getUrl().toString())
+                                    .addHeader("token", Objects.requireNonNull(header.get("token")))
+                                    .build();
+                        }
+                        else {
+                            mRequest = new Request.Builder()
+                                    .url(request.getUrl().toString())
+                                    .addHeader("token", Objects.requireNonNull(header.get("token")))
+                                    .method("POST", RequestBody.create(null, request.getAjaxData() ) )
+                                    .build();
+                        }
+                        Response response = httpClient.newCall(mRequest).execute();
+                        assert response.body() != null;
+                        return new WebResourceResponse(
+                                null, // set content-type
+                                response.header("content-encoding", "utf-8"),
+                                response.body().byteStream()
+                        );
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
                 return null;
             }
-
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        myWebView.loadUrl(homepage+urlresponse, header);
+        myWebView.loadUrl(homepage +urlresponse, header);
     }
     @Override
     public void onBackPressed() {
