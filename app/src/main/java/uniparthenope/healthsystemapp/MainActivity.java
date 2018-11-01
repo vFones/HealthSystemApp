@@ -44,15 +44,31 @@ public class MainActivity extends AppCompatActivity {
         String urlresponse = in.getStringExtra("url");
 
         myWebView = findViewById(R.id.web);
-        myWebView.setWebViewClient(new WebViewClient() {
+        myWebView.setWebViewClient(new WriteHandlingWebViewClient(myWebView) {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
-                if(request.getUrl().toString().startsWith(homepage)){
-                    view.loadUrl(request.getUrl().toString(),header);
-                    return true;
+            public WebResourceResponse shouldInterceptRequest(WebView view, WriteHandlingWebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if(url.startsWith(homepage)){
+                    try {
+                        OkHttpClient httpClient = new OkHttpClient();
+                        Request mRequest = new Request.Builder()
+                                .url(request.getUrl().toString())
+                                .method( request.getMethod(), RequestBody.create(null, request.getAjaxData()))
+                                .addHeader("token", header.get("token"))
+                                .build();
+                        Response response = httpClient.newCall(mRequest).execute();
+                        return new WebResourceResponse(
+                                null, // set content-type
+                                response.header("content-encoding", "utf-8"),
+                                response.body().byteStream()
+                        );
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
-                return false;
+                return null;
             }
+
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
