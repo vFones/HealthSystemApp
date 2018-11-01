@@ -1,5 +1,6 @@
 package uniparthenope.healthsystemapp;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,11 +13,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.view.View;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.konstantinschubert.writeinterceptingwebview.WriteHandlingWebResourceRequest;
@@ -24,6 +23,7 @@ import com.konstantinschubert.writeinterceptingwebview.WriteHandlingWebViewClien
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private String homepage;
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private WebView myWebView;
     private ProgressBar progressBar;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,23 +49,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WriteHandlingWebResourceRequest request) {
                 String url = request.getUrl().toString();
-                if(url.startsWith(homepage)){
-                    try {
-                        OkHttpClient httpClient = new OkHttpClient();
-                        Request mRequest = new Request.Builder()
-                                .url(request.getUrl().toString())
-                                .method( request.getMethod(), RequestBody.create(null, request.getAjaxData()))
-                                .addHeader("token", header.get("token"))
-                                .build();
-                        Response response = httpClient.newCall(mRequest).execute();
-                        return new WebResourceResponse(
-                                null, // set content-type
-                                response.header("content-encoding", "utf-8"),
-                                response.body().byteStream()
-                        );
-                    } catch (Exception e) {
-                        return null;
-                    }
+                if(url.startsWith(homepage)) try {
+                    OkHttpClient httpClient = new OkHttpClient();
+                    Request mRequest = new Request.Builder()
+                            .url(request.getUrl().toString())
+                            .method(request.getMethod(), RequestBody.create(null, request.getAjaxData()))
+                            .addHeader("token", Objects.requireNonNull(header.get("token")))
+                            .build();
+                    Response response = httpClient.newCall(mRequest).execute();
+                    assert response.body() != null;
+                    return new WebResourceResponse(
+                            null, // set content-type
+                            response.header("content-encoding", "utf-8"),
+                            response.body().byteStream()
+                    );
+                } catch (Exception e) {
+                    return null;
                 }
                 return null;
             }
