@@ -1,7 +1,7 @@
 <h1 align="center"><img alt="HealthSystem Logo" src="https://i.imgur.com/NwZwVHN.jpg" width="320"></h1>
 <h2 align="center"> Enanched comunication </h2>
 
-**Companion App for HealthSystem**. Exame project for Mobile Devices. First Java/Android application.
+**Companion App for HealthSystem**. Exam project for Mobile Devices. First Java/Android application.
 
 
 ### About
