@@ -11,4 +11,4 @@ Increasing the comunication between doctors and patients is the main purpose of 
 ### Some screenshots
 | Splash | Login | WebView |
 |:--:|:--:|:--:|
-| ![Splash](https://imgur.com/HG4IsGR) | ![Login](https://imgur.com/RQAaynt) | ![WebView](https://imgur.com/J5Hduwa) |
+| ![Splash](https://i.imgur.com/HG4IsGR.jpg) | ![Login](https://i.imgur.com/RQAaynt.jpg) | ![WebView](https://i.imgur.com/J5Hduwa.jpg) |
