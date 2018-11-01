@@ -1,0 +1,2 @@
+include ':app', ':writeintercept'
+project(':writeintercept').projectDir = new File('libs/writeintercept')

@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="fab_margin">50%</dimen>
+    <dimen name="LogIn_Button" />
+</resources>
